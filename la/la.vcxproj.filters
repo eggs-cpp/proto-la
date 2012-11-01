@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="eggs">
+      <UniqueIdentifier>{e3c8ed2e-0fa7-442c-82ea-2cc96d88dbf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="eggs\la">
+      <UniqueIdentifier>{895316cb-fff1-47f6-ae05-7eed4c77fed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="eggs\la\detail_proto">
+      <UniqueIdentifier>{b7394811-e5c0-4898-b50d-f74f7e5287ed}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="eggs\la\vector.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\vector_ref.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\vector_traits.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\matrix_traits.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\vector_grammar.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\unroll_vector_expr.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\vector_literal.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\matrix_grammar.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\matrix_literal.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\la_domain.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\scalar_grammar.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\distribute_subscript.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\domain.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\detail_proto\component_context.hpp">
+      <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
