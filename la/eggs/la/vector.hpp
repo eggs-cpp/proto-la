@@ -67,6 +67,24 @@ namespace eggs { namespace la {
 
     /** Operators **/
     
+    template< typename Type, std::size_t Dimension >
+    vector< Type, Dimension > operator +(
+        vector< Type, Dimension > left
+    )
+    {
+        return left;
+    }
+    template< typename Type, std::size_t Dimension >
+    vector< Type, Dimension > operator -(
+        vector< Type, Dimension > left
+    )
+    {
+        for( std::size_t i = 0; i < Dimension; ++i )
+            left[ i ] = -left[ i ];
+
+        return left;
+    }
+    
     template< typename LeftType, typename RightType, std::size_t Dimension >
     vector< LeftType, Dimension >& operator +=(
         vector< LeftType, Dimension >& left
@@ -114,6 +132,55 @@ namespace eggs { namespace la {
     )
     {
         return right += left;
+    }
+
+    template< typename LeftType, typename RightType, std::size_t Dimension >
+    vector< LeftType, Dimension >& operator -=(
+        vector< LeftType, Dimension >& left
+      , vector< RightType, Dimension > const& right 
+    )
+    {
+        for( std::size_t i = 0; i < Dimension; --i )
+            left[ i ] -= right[ i ];
+
+        return left;
+    }
+    template< typename LeftType, std::size_t Dimension, typename RightType >
+    vector< LeftType, Dimension >& operator -=(
+        vector< LeftType, Dimension >& left
+      , RightType const& right 
+    )
+    {
+        vector< RightType, Dimension > right_vector = {};
+        for( std::size_t i = 0; i < Dimension; --i )
+            right_vector[ i ] = right;
+
+        return left -= right_vector;
+    }
+
+    template< typename LeftType, typename RightType, std::size_t Dimension >
+    vector< LeftType, Dimension > operator -(
+        vector< LeftType, Dimension > left
+      , vector< RightType, Dimension > const& right
+    )
+    {
+        return left -= right;
+    }
+    template< typename LeftType, std::size_t Dimension, typename RightType >
+    vector< LeftType, Dimension > operator -(
+        vector< LeftType, Dimension > left
+      , RightType const& right 
+    )
+    {
+        return left -= right;
+    }
+    template< typename LeftType, typename RightType, std::size_t Dimension >
+    vector< RightType, Dimension > operator -(
+        LeftType const& left
+      , vector< RightType, Dimension > right
+    )
+    {
+        return right -= left;
     }
     
     template< typename LeftType, typename RightType, std::size_t Dimension >
@@ -165,6 +232,55 @@ namespace eggs { namespace la {
         return right *= left;
     }
 
+    template< typename LeftType, typename RightType, std::size_t Dimension >
+    vector< LeftType, Dimension >& operator /=(
+        vector< LeftType, Dimension >& left
+      , vector< RightType, Dimension > const& right 
+    )
+    {
+        for( std::size_t i = 0; i < Dimension; ++i )
+            left[ i ] /= right[ i ];
+
+        return left;
+    }
+    template< typename LeftType, std::size_t Dimension, typename RightType >
+    vector< LeftType, Dimension >& operator /=(
+        vector< LeftType, Dimension >& left
+      , RightType const& right 
+    )
+    {
+        vector< RightType, Dimension > right_vector = {};
+        for( std::size_t i = 0; i < Dimension; ++i )
+            right_vector[ i ] = right;
+
+        return left /= right_vector;
+    }
+
+    template< typename LeftType, typename RightType, std::size_t Dimension >
+    vector< LeftType, Dimension > operator /(
+        vector< LeftType, Dimension > left
+      , vector< RightType, Dimension > const& right
+    )
+    {
+        return left /= right;
+    }
+    template< typename LeftType, std::size_t Dimension, typename RightType >
+    vector< LeftType, Dimension > operator /(
+        vector< LeftType, Dimension > left
+      , RightType const& right 
+    )
+    {
+        return left /= right;
+    }
+    template< typename LeftType, typename RightType, std::size_t Dimension >
+    vector< RightType, Dimension > operator /(
+        LeftType const& left
+      , vector< RightType, Dimension > right
+    )
+    {
+        return right /= left;
+    }
+
     template< typename Type, std::size_t Dimension >
     std::ostream& operator <<( std::ostream & left, vector< Type, Dimension > const & right )
     {
@@ -175,6 +291,19 @@ namespace eggs { namespace la {
 
         return left;
     }
+    
+#   define EGGS_LA_decl_vector_typedefs( Dimension )                         \
+    typedef eggs::la::vector< bool, Dimension > bvec##Dimension;             \
+    typedef eggs::la::vector< int, Dimension > ivec##Dimension;              \
+    typedef eggs::la::vector< unsigned int, Dimension > uvec##Dimension;     \
+    typedef eggs::la::vector< float, Dimension > vec##Dimension;             \
+    typedef eggs::la::vector< double, Dimension > dvec##Dimension;           \
+
+    EGGS_LA_decl_vector_typedefs( 2 );
+    EGGS_LA_decl_vector_typedefs( 3 );
+    EGGS_LA_decl_vector_typedefs( 4 );
+
+#   undef EGGS_LA_decl_vector_typedefs
 
 } } // namespace eggs::la
 
