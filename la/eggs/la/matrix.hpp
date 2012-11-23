@@ -27,6 +27,8 @@ namespace eggs { namespace la {
     template< typename Type, std::size_t Rows, std::size_t Columns >
     class matrix
     {
+        typedef Type column_type[ Columns ];
+
     public:
         Type* data()
         {
@@ -37,13 +39,13 @@ namespace eggs { namespace la {
             return &_value[0];
         }
 
-        Type& operator []( std::size_t index )
+        column_type& operator []( std::size_t row )
         {
-            return _value[ index ];
+            return reinterpret_cast< column_type& >( _value[ row * Columns ] );
         }
-        Type const& operator []( std::size_t index ) const
+        column_type const& operator []( std::size_t row ) const
         {
-            return _value[ index ];
+            return reinterpret_cast< column_type& >( _value[ row * Columns ] );
         }
         
         matrix& operator =( matrix< Type, Rows, Columns > const& right )
