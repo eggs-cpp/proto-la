@@ -70,10 +70,8 @@ namespace eggs { namespace la {
     {};
 
     template< typename Matrix >
-    typename boost::enable_if<
-        typename is_matrix< Matrix >::type
-      , matrix_ref_wrapper< Matrix >
-    >::type matrix_ref( Matrix& v )
+    matrix_ref_wrapper< Matrix >
+        matrix_ref( Matrix& v )
     {
         BOOST_STATIC_ASSERT(( is_matrix< Matrix >::type::value ));
 
@@ -87,10 +85,8 @@ namespace eggs { namespace la {
     }
 
     template< typename Matrix >
-    typename boost::enable_if<
-        typename is_matrix< Matrix >::type
-      , matrix_ref_wrapper< Matrix const >
-    >::type matrix_cref( Matrix const& v )
+    matrix_ref_wrapper< Matrix const >
+        matrix_cref( Matrix const& v )
     {
         BOOST_STATIC_ASSERT(( is_matrix< Matrix >::type::value ));
 
