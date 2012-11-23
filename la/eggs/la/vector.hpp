@@ -293,7 +293,7 @@ namespace eggs { namespace la {
     }
 
     template< typename Type, std::size_t Dimension >
-    std::ostream& operator <<( std::ostream & left, vector< Type, Dimension > const & right )
+    std::ostream& operator <<( std::ostream& left, vector< Type, Dimension > const& right )
     {
         left << "vector{";
         for( std::size_t i = 0; i < Dimension; ++i )
