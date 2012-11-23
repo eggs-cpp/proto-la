@@ -25,8 +25,18 @@
 namespace eggs { namespace la {
 
     template< typename Type, std::size_t Dimension >
-    struct vector
+    class vector
     {
+    public:
+        Type* data()
+        {
+            return &_value[0];
+        }
+        Type const* data() const
+        {
+            return &_value[0];
+        }
+
         Type& operator []( std::size_t index )
         {
             return _value[ index ];
@@ -52,6 +62,7 @@ namespace eggs { namespace la {
             return *this;
         }
 
+    //private: exposition-only
         Type _value[ Dimension ];
     };
 
@@ -291,19 +302,6 @@ namespace eggs { namespace la {
 
         return left;
     }
-    
-#   define EGGS_LA_decl_vector_typedefs( Dimension )                         \
-    typedef eggs::la::vector< bool, Dimension > bvec##Dimension;             \
-    typedef eggs::la::vector< int, Dimension > ivec##Dimension;              \
-    typedef eggs::la::vector< unsigned int, Dimension > uvec##Dimension;     \
-    typedef eggs::la::vector< float, Dimension > vec##Dimension;             \
-    typedef eggs::la::vector< double, Dimension > dvec##Dimension;           \
-
-    EGGS_LA_decl_vector_typedefs( 2 );
-    EGGS_LA_decl_vector_typedefs( 3 );
-    EGGS_LA_decl_vector_typedefs( 4 );
-
-#   undef EGGS_LA_decl_vector_typedefs
 
 } } // namespace eggs::la
 
