@@ -14,10 +14,13 @@
 
 #include <eggs/la/vector_traits.hpp>
 
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/size_t.hpp>
 
 #include <boost/static_assert.hpp>
+
+#include <boost/utility/enable_if.hpp>
 
 #include <cstddef>
 
@@ -31,6 +34,22 @@ namespace eggs { namespace la {
           : _vector( vector )
         {}
 
+        template< typename RightVector >
+        typename boost::enable_if<
+            boost::mpl::and_<
+                is_vector< RightVector >
+              , is_same_dimension< Vector, RightVector >
+            >
+          , vector_ref_wrapper&
+        >::type operator=( RightVector const& right )
+        {
+            for( std::size_t i = 0; i < dimension< Vector >::type::value; ++i )
+            {
+                _vector[ i ] = right[ i ];
+            }
+            return *this;
+        }
+
     private:
         Vector& _vector;
     };
@@ -41,30 +60,39 @@ namespace eggs { namespace la {
     {};
 
     template< typename Vector >
-    inline vector_ref_wrapper< Vector >
-        vector_ref( Vector& v )
+    struct dimension< vector_ref_wrapper< Vector > >
+      : dimension< Vector >::type
+    {};
+
+    template< typename Vector >
+    typename boost::enable_if<
+        typename is_vector< Vector >::type
+      , vector_ref_wrapper< Vector >
+    >::type vector_ref( Vector& v )
     {
         BOOST_STATIC_ASSERT(( is_vector< Vector >::type::value ));
 
         return vector_ref_wrapper< Vector >( v );
     }
     template< typename Vector >
-    inline vector_ref_wrapper< Vector >
+    vector_ref_wrapper< Vector >
         vector_ref( vector_ref_wrapper< Vector >& v )
     {
         return v;
     }
 
     template< typename Vector >
-    inline vector_ref_wrapper< Vector const >
-        vector_cref( Vector const& v )
+    typename boost::enable_if<
+        typename is_vector< Vector >::type
+      , vector_ref_wrapper< Vector const >
+    >::type vector_cref( Vector const& v )
     {
         BOOST_STATIC_ASSERT(( is_vector< Vector >::type::value ));
 
         return vector_ref_wrapper< Vector const >( v );
     }
     template< typename Vector >
-    inline vector_ref_wrapper< Vector const >
+    vector_ref_wrapper< Vector const >
         vector_cref( vector_ref_wrapper< Vector const >& v )
     {
         return v;
