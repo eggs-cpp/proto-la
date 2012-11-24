@@ -28,7 +28,7 @@ static const int cloops = 1;
 
 typedef eggs::la::vector< int, 3 > ivec3;
 
-ivec3 unrolled_time( ivec3& p, ivec3& q, ivec3& r )
+ivec3 unrolled_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
 {
     ivec3 ret;
 
@@ -36,9 +36,9 @@ ivec3 unrolled_time( ivec3& p, ivec3& q, ivec3& r )
     tim.restart();
     for (int i = 0; i < cloops; ++i)
     {
-        ret[0] += ( p[0] = q[0] + r[0] * 3.f );
-        ret[1] += ( p[1] = q[1] + r[1] * 3.f );
-        ret[2] += ( p[2] = q[2] + r[2] * 3.f );
+        ret[0] += ( p[0] * 3 + ( r[0] - q[0] ) );
+        ret[1] += ( p[1] * 3 + ( r[1] - q[1] ) );
+        ret[2] += ( p[2] * 3 + ( r[2] - q[2] ) );
     }
     double d = tim.elapsed();
 
@@ -49,7 +49,7 @@ ivec3 unrolled_time( ivec3& p, ivec3& q, ivec3& r )
 template< typename Expr >
 ivec3 do_proto_time( Expr& expr )
 {
-    ivec3 ret; 
+    ivec3 ret;
 
     boost::timer tim;
     tim.restart();
@@ -63,12 +63,12 @@ ivec3 do_proto_time( Expr& expr )
     return ret;
 }
 
-ivec3 proto_time( ivec3& p, ivec3& q, ivec3& r )
+ivec3 proto_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
 {
-    return do_proto_time( ( p = q + r * 3.f ) );
+    return do_proto_time( p * 3 + ( r - q ) );
 }
 
-ivec3 full_proto_time( ivec3& p, ivec3& q, ivec3& r )
+ivec3 full_proto_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
 {
     ivec3 ret;
 
@@ -76,7 +76,7 @@ ivec3 full_proto_time( ivec3& p, ivec3& q, ivec3& r )
     tim.restart();
     for (int i = 0; i < cloops; ++i)
     {
-        ret += ( p = q + r * 3.f );
+        ret += ( p * 3 + ( r - q ) );
     }
     double d = tim.elapsed();
 
@@ -88,10 +88,8 @@ int main( int argc, char** argv )
 {
     std::cout << "\n\n --- timing --- \n\n" << std::endl;
             
-    std::stringstream input( "0 0 0\n0 1 2\n3 4 5" );
-    eggs::la::vector< int, 3 > p;
-    eggs::la::vector< int, 3 > q;
-    eggs::la::vector< int, 3 > r;
+    std::stringstream input( "0 1 2\n3 4 5\n6 7 8" );
+    ivec3 p, q, r;
             
     input.seekg( 0, std::ios::beg );
     input

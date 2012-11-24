@@ -12,6 +12,9 @@
 #ifndef EGGS_LA_DETAIL_PROTO_SCALAR_GRAMMAR_HPP
 #define EGGS_LA_DETAIL_PROTO_SCALAR_GRAMMAR_HPP
 
+#include <eggs/la/detail_proto/matrix_literal.hpp>
+#include <eggs/la/detail_proto/vector_literal.hpp>
+
 #include <boost/proto/proto.hpp>
 
 namespace eggs { namespace la { namespace detail_proto {
@@ -20,13 +23,7 @@ namespace eggs { namespace la { namespace detail_proto {
 
     struct scalar_grammar
       : or_<
-            terminal< float >
-            //not_< 
-            //    or_< 
-            //        if_< is_vector< _value >(), terminal< _ > >
-            //      , if_< is_matrix< _value >(), terminal< _ > >
-            //    >
-            //>
+            terminal< int >
           , plus< scalar_grammar, scalar_grammar >
           , minus< scalar_grammar, scalar_grammar >
           , multiplies< scalar_grammar, scalar_grammar >
