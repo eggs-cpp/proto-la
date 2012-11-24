@@ -12,6 +12,8 @@
 #ifndef EGGS_LA_MATRIX_TRAITS_HPP
 #define EGGS_LA_MATRIX_TRAITS_HPP
 
+#include <eggs/la/common_traits.hpp>
+
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
@@ -26,13 +28,46 @@ namespace eggs { namespace la {
     {};
 
     template< typename Matrix, typename Enable = void >
-    struct rows;
+    struct matrix_traits
+    {
+        // typedef -user-defined- scalar_type;
+        // static std::size_t const rows = -user-defined-;
+        // static std::size_t const columns = -user-defined-;
+
+        // template< std::size_t Row, std::size_t Column >
+        // static scalar_type& at( Matrix& m );
+        // template< std::size_t Row, std::size_t Column >
+        // static scalar_type const& at( Matrix const& m );
+    };
+
+    template< typename Matrix >
+    struct scalar_type<
+        Matrix
+      , typename boost::enable_if<
+            is_matrix< Matrix >
+        >::type
+    >
+    {
+        typedef
+            typename matrix_traits< Matrix >::scalar_type
+            type;
+    };
+
+    template< typename Matrix, typename Enable = void >
+    struct rows
+    {
+        typedef
+            boost::mpl::size_t< matrix_traits< Matrix >::rows >
+            type;
+    };
     
     template< typename Matrix, typename Enable = void >
-    struct columns;
-
-    template< typename LeftMatrix, typename RightMatrix, typename Enable = void >
-    struct is_same_dimension;
+    struct columns
+    {
+        typedef
+            boost::mpl::size_t< matrix_traits< Matrix >::columns >
+            type;
+    };
 
     template<
         typename LeftMatrix, typename RightMatrix

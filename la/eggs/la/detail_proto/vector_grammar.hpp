@@ -12,7 +12,6 @@
 #ifndef EGGS_LA_DETAIL_PROTO_VECTOR_GRAMMAR_HPP
 #define EGGS_LA_DETAIL_PROTO_VECTOR_GRAMMAR_HPP
 
-#include <eggs/la/detail_proto/unroll_vector_expr.hpp>
 #include <eggs/la/detail_proto/vector_literal.hpp>
 
 #include <boost/proto/proto.hpp>
@@ -67,16 +66,6 @@ namespace eggs { namespace la { namespace detail_proto {
             divides< vector_grammar, vector_grammar >
           , divides< vector_grammar, scalar_grammar >
           , divides< scalar_grammar, vector_grammar >
-        >
-    {};
-
-    template<>
-    struct vector_grammar_impl::case_< tag::assign >
-      : or_<
-            when<
-                assign< vector_literal, vector_grammar >
-              , unroll_vector_expr( _, _left )
-            >
         >
     {};
 

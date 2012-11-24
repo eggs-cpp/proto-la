@@ -29,6 +29,10 @@ namespace eggs { namespace la {
     template< typename Vector >
     class vector_ref_wrapper
     {
+        typedef
+            typename vector_traits< Vector >::scalar_type
+            scalar_type;
+
     public:
         explicit vector_ref_wrapper( Vector& vector )
           : _vector( vector )
@@ -49,6 +53,21 @@ namespace eggs { namespace la {
             }
             return *this;
         }
+        
+        template< std::size_t Index >
+        scalar_type& at()
+        {
+            return
+                vector_traits< Vector >::
+                    template at< Index >( _vector );
+        }
+        template< std::size_t Index >
+        scalar_type const& at() const
+        {
+            return
+                vector_traits< Vector >::
+                    template at< Index >( _vector );
+        }
 
     private:
         Vector& _vector;
@@ -58,11 +77,29 @@ namespace eggs { namespace la {
     struct is_vector< vector_ref_wrapper< Vector > >
       : boost::mpl::true_
     {};
-
+    
     template< typename Vector >
-    struct dimension< vector_ref_wrapper< Vector > >
-      : dimension< Vector >::type
-    {};
+    struct vector_traits< vector_ref_wrapper< Vector > >
+    {
+        typedef vector_ref_wrapper< Vector > vector_type;
+
+        typedef
+            typename vector_traits< Vector >::scalar_type
+            scalar_type;
+        static std::size_t const dimension =
+            vector_traits< Vector >::dimension;
+
+        template< std::size_t Index >
+        static scalar_type& at( vector_type& v )
+        {
+            return v.template at< Index >();
+        }
+        template< std::size_t Index >
+        static scalar_type const& at( vector_type const& v )
+        {
+            return v.template at< Index >();
+        }
+    };
 
     template< typename Vector >
     vector_ref_wrapper< Vector >

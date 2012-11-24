@@ -12,6 +12,7 @@
 #ifndef EGGS_LA_HPP
 #define EGGS_LA_HPP
 
+#include <eggs/la/common_traits.hpp>
 #include <eggs/la/matrix.hpp>
 #include <eggs/la/matrix_ref.hpp>
 #include <eggs/la/matrix_traits.hpp>

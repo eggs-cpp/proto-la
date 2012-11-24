@@ -21,10 +21,7 @@ namespace eggs { namespace la { namespace detail_proto {
     using namespace boost::proto;
 
     struct vector_literal
-      : and_<
-            terminal< _ >
-          , if_< is_vector< _value >() >
-        >
+      : if_< is_vector< _ >() >
     {};
 
 } } } // namespace eggs::la::detail_proto

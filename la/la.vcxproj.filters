@@ -36,9 +36,6 @@
     <ClInclude Include="eggs\la\detail_proto\vector_grammar.hpp">
       <Filter>eggs\la\detail_proto</Filter>
     </ClInclude>
-    <ClInclude Include="eggs\la\detail_proto\unroll_vector_expr.hpp">
-      <Filter>eggs\la\detail_proto</Filter>
-    </ClInclude>
     <ClInclude Include="eggs\la\detail_proto\vector_literal.hpp">
       <Filter>eggs\la\detail_proto</Filter>
     </ClInclude>
@@ -62,6 +59,12 @@
     </ClInclude>
     <ClInclude Include="eggs\la\detail_proto\component_context.hpp">
       <Filter>eggs\la\detail_proto</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\common_traits.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la.hpp">
+      <Filter>eggs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

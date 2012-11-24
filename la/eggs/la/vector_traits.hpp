@@ -12,11 +12,16 @@
 #ifndef EGGS_LA_VECTOR_TRAITS_HPP
 #define EGGS_LA_VECTOR_TRAITS_HPP
 
+#include <eggs/la/common_traits.hpp>
+
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/size_t.hpp>
 
 #include <boost/utility/enable_if.hpp>
+
+#include <cstddef>
 
 namespace eggs { namespace la {
 
@@ -26,10 +31,37 @@ namespace eggs { namespace la {
     {};
 
     template< typename Vector, typename Enable = void >
-    struct dimension;
+    struct vector_traits
+    {
+        // typedef -user-defined- scalar_type;
+        // static std::size_t const dimension = -user-defined-;
 
-    template< typename LeftVector, typename RightVector, typename Enable = void >
-    struct is_same_dimension;
+        // template< std::size_t Index >
+        // static scalar_type& at( Vector& v );
+        // template< std::size_t Index >
+        // static scalar_type const& at( Vector const& v );
+    };
+
+    template< typename Vector >
+    struct scalar_type<
+        Vector
+      , typename boost::enable_if<
+            is_vector< Vector >
+        >::type
+    >
+    {
+        typedef
+            typename vector_traits< Vector >::scalar_type
+            type;
+    };
+
+    template< typename Vector, typename Enable = void >
+    struct dimension
+    {
+        typedef
+            boost::mpl::size_t< vector_traits< Vector >::dimension >
+            type;
+    };
 
     template<
         typename LeftVector, typename RightVector

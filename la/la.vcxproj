@@ -81,13 +81,14 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="eggs\la.hpp" />
+    <ClInclude Include="eggs\la\common_traits.hpp" />
     <ClInclude Include="eggs\la\detail_proto\component_context.hpp" />
     <ClInclude Include="eggs\la\detail_proto\distribute_subscript.hpp" />
     <ClInclude Include="eggs\la\detail_proto\la_domain.hpp" />
     <ClInclude Include="eggs\la\detail_proto\matrix_grammar.hpp" />
     <ClInclude Include="eggs\la\detail_proto\matrix_literal.hpp" />
     <ClInclude Include="eggs\la\detail_proto\scalar_grammar.hpp" />
-    <ClInclude Include="eggs\la\detail_proto\unroll_vector_expr.hpp" />
     <ClInclude Include="eggs\la\detail_proto\vector_grammar.hpp" />
     <ClInclude Include="eggs\la\detail_proto\vector_literal.hpp" />
     <ClInclude Include="eggs\la\domain.hpp" />
