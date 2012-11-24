@@ -33,30 +33,6 @@ namespace eggs { namespace la {
 
     namespace detail {
 
-        template< typename Vector, typename Expr, typename AssignOp >
-        struct vector_proto_assign
-        {
-            explicit vector_proto_assign( Vector& vector, Expr const& expr )
-              : _vector( vector )
-              , _expr( expr )
-            {}
-
-            template< typename Index >
-            BOOST_FORCEINLINE void operator()( Index /*index*/ ) const
-            {
-                AssignOp()(
-                    vector_traits< Vector >::at< Index::value >( _vector )
-                  , boost::proto::eval(
-                        boost::proto::as_expr( _expr )
-                      , detail_proto::component_context< Index::value >()
-                    )
-                );
-            }
-
-            Vector& _vector;
-            Expr const& _expr;
-        };
-
         struct assign
         {
             template< typename Left, typename Right >
@@ -97,9 +73,54 @@ namespace eggs { namespace la {
                 left /= right;
             }
         };
+
+        template< typename Vector, typename AssignOp >
+        struct vector_assign
+        {
+            explicit vector_assign( Vector& left, Vector const& right )
+              : _left( left )
+              , _right( right )
+            {}
+
+            template< typename Index >
+            BOOST_FORCEINLINE void operator()( Index /*index*/ ) const
+            {
+                AssignOp()(
+                    vector_traits< Vector >::at< Index::value >( _left )
+                  , vector_traits< Vector >::at< Index::value >( _right )
+                );
+            }
+
+            Vector& _left;
+            Vector const& _right;
+        };
+
+        template< typename Vector, typename Expr, typename AssignOp >
+        struct vector_proto_assign
+        {
+            explicit vector_proto_assign( Vector& left, Expr const& right )
+              : _left( left )
+              , _right( right )
+            {}
+
+            template< typename Index >
+            BOOST_FORCEINLINE void operator()( Index /*index*/ ) const
+            {
+                AssignOp()(
+                    vector_traits< Vector >::at< Index::value >( _left )
+                  , boost::proto::eval(
+                        boost::proto::as_expr( _right )
+                      , detail_proto::component_context< Index::value >()
+                    )
+                );
+            }
+
+            Vector& _left;
+            Expr const& _right;
+        };
         
-        template< typename AssignOp, typename Vector, typename Expr >
-        void assign_component_wise( Vector& vector, Expr const& expr )
+        template< typename AssignOp, typename Vector >
+        void assign_component_wise( Vector& left, Vector const& right )
         {
             boost::mpl::for_each<
                 boost::mpl::range_c<
@@ -107,7 +128,20 @@ namespace eggs { namespace la {
                   , 0, dimension< Vector >::type::value
                 >
             >(
-                vector_proto_assign< Vector, Expr, AssignOp >( vector, expr )
+                vector_assign< Vector, AssignOp >( left, right )
+            );
+        }
+        
+        template< typename AssignOp, typename Vector, typename Expr >
+        void assign_component_wise( Vector& left, Expr const& right )
+        {
+            boost::mpl::for_each<
+                boost::mpl::range_c<
+                    std::size_t
+                  , 0, dimension< Vector >::type::value
+                >
+            >(
+                vector_proto_assign< Vector, Expr, AssignOp >( left, right )
             );
         }
 
@@ -132,10 +166,7 @@ namespace eggs { namespace la {
 
         vector( vector const& right )
         {
-            std::copy(
-                right.data() + 0, right.data() + Dimension
-              , data()
-            );
+            detail::assign_component_wise< detail::assign >( *this, right );
         }
         template< typename Expr >
         vector( Expr const& right )
@@ -163,10 +194,7 @@ namespace eggs { namespace la {
         
         vector& operator =( vector const& right )
         {
-            std::copy(
-                right.data() + 0, right.data() + Dimension
-              , data()
-            );
+            detail::assign_component_wise< detail::assign >( *this, right );
             return *this;
         }
         template< typename Expr >
@@ -242,12 +270,15 @@ namespace eggs { namespace la {
     }
     
     template< typename Type, std::size_t Dimension >
-    void print( std::ostream& stream, vector< Type, Dimension > const& v )
+    std::ostream& operator <<( std::ostream& left, vector< Type, Dimension > const& right )
     {
-        stream << "vector{";
+        left << "vector{";
         for( std::size_t i = 0; i < Dimension; ++i )
-            stream << ( i ? ", " : "" ) << v[i];
-        stream << "}";
+        {
+            left << ( i ? ", " : "" ) << right[ i ];
+        }
+        left << "}";
+        return left;
     }
 
 } } // namespace eggs::la

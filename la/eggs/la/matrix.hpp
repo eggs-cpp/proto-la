@@ -48,7 +48,7 @@ namespace eggs { namespace la {
         }
         column_type const& operator []( std::size_t row ) const
         {
-            return reinterpret_cast< column_type& >( _value[ row * Columns ] );
+            return reinterpret_cast< column_type const& >( _value[ row * Columns ] );
         }
         
         matrix& operator =( matrix< Type, Rows, Columns > const& right )
@@ -105,13 +105,20 @@ namespace eggs { namespace la {
     /** Operators **/
     
     template< typename Type, std::size_t Rows, std::size_t Columns >
-    void print( std::ostream& stream, matrix< Type, Rows, Columns > const& right )
+    std::ostream& operator <<( std::ostream& left, matrix< Type, Rows, Columns > const& right )
     {
-        stream << "matrix{";
+        left << "matrix{";
         for( std::size_t i = 0; i < Rows; ++i )
+        {
+            left << ( i ? ", " : "" ) << "{";
             for( std::size_t j = 0; j < Columns; ++j )
-                stream << ( j ? ", " : "" ) << m[i][j];
-        stream << "}";
+            {
+                left << ( j ? ", " : "" ) << right[ i ][ j  ];
+            }
+            left << "}";
+        }
+        left << "}";
+        return left;
     }
 
 } } // namespace eggs::la
