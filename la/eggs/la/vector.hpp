@@ -30,118 +30,52 @@
 #include <iosfwd>
 
 namespace eggs { namespace la {
+    
+    template< typename Type, std::size_t Dimension >
+    class vector;
 
     namespace detail {
 
-        struct assign
+        template< typename Expr >
+        struct eval_component_wise_impl
         {
-            template< typename Left, typename Right >
-            void operator()( Left& left, Right const& right ) const
-            {
-                left = right;
-            }
-        };
-        struct plus_assign
-        {
-            template< typename Left, typename Right >
-            void operator()( Left& left, Right const& right ) const
-            {
-                left += right;
-            }
-        };
-        struct minus_assign
-        {
-            template< typename Left, typename Right >
-            void operator()( Left& left, Right const& right ) const
-            {
-                left -= right;
-            }
-        };
-        struct multiplies_assign
-        {
-            template< typename Left, typename Right >
-            void operator()( Left& left, Right const& right ) const
-            {
-                left *= right;
-            }
-        };
-        struct divides_assign
-        {
-            template< typename Left, typename Right >
-            void operator()( Left& left, Right const& right ) const
-            {
-                left /= right;
-            }
-        };
-
-        template< typename Vector, typename AssignOp >
-        struct vector_assign
-        {
-            explicit vector_assign( Vector& left, Vector const& right )
-              : _left( left )
-              , _right( right )
+            explicit eval_component_wise_impl( Expr const& expr )
+              : _expr( expr )
             {}
 
             template< typename Index >
-            BOOST_FORCEINLINE void operator()( Index /*index*/ ) const
+            void operator()( Index /*index*/ ) const
             {
-                AssignOp()(
-                    vector_traits< Vector >::at< Index::value >( _left )
-                  , vector_traits< Vector >::at< Index::value >( _right )
+                boost::proto::eval(
+                    _expr
+                  , detail_proto::component_context< Index::value >()
                 );
             }
 
-            Vector& _left;
-            Vector const& _right;
-        };
-
-        template< typename Vector, typename Expr, typename AssignOp >
-        struct vector_proto_assign
-        {
-            explicit vector_proto_assign( Vector& left, Expr const& right )
-              : _left( left )
-              , _right( right )
-            {}
-
-            template< typename Index >
-            BOOST_FORCEINLINE void operator()( Index /*index*/ ) const
-            {
-                AssignOp()(
-                    vector_traits< Vector >::at< Index::value >( _left )
-                  , boost::proto::eval(
-                        boost::proto::as_expr( _right )
-                      , detail_proto::component_context< Index::value >()
-                    )
-                );
-            }
-
-            Vector& _left;
-            Expr const& _right;
+            Expr const& _expr;
         };
         
-        template< typename AssignOp, typename Vector >
-        void assign_component_wise( Vector& left, Vector const& right )
+        template< std::size_t Dimension, typename Expr >
+        void eval_component_wise( Expr const& expr )
         {
             boost::mpl::for_each<
                 boost::mpl::range_c<
                     std::size_t
-                  , 0, dimension< Vector >::type::value
+                  , 0, Dimension
                 >
+              , eval_component_wise_impl< Expr > const&
             >(
-                vector_assign< Vector, AssignOp >( left, right )
+                eval_component_wise_impl< Expr >( expr )
             );
         }
-        
-        template< typename AssignOp, typename Vector, typename Expr >
-        void assign_component_wise( Vector& left, Expr const& right )
+
+        template< typename Tag, typename Type, std::size_t Dimension, typename Expr >
+        void eval_component_wise( vector< Type, Dimension >& vector, Expr const& expr )
         {
-            boost::mpl::for_each<
-                boost::mpl::range_c<
-                    std::size_t
-                  , 0, dimension< Vector >::type::value
-                >
-            >(
-                vector_proto_assign< Vector, Expr, AssignOp >( left, right )
+            eval_component_wise< Dimension >(
+                boost::proto::make_expr< Tag >(
+                    boost::ref( vector ), boost::cref( expr )
+                )
             );
         }
 
@@ -166,12 +100,12 @@ namespace eggs { namespace la {
 
         vector( vector const& right )
         {
-            detail::assign_component_wise< detail::assign >( *this, right );
+            detail::eval_component_wise< boost::proto::tag::assign >( *this, right );
         }
         template< typename Expr >
         vector( Expr const& right )
         {
-            detail::assign_component_wise< detail::assign >( *this, right );
+            detail::eval_component_wise< boost::proto::tag::assign >( *this, right );
         }
 
         Type* data()
@@ -194,13 +128,13 @@ namespace eggs { namespace la {
         
         vector& operator =( vector const& right )
         {
-            detail::assign_component_wise< detail::assign >( *this, right );
+            detail::eval_component_wise< boost::proto::tag::assign >( *this, right );
             return *this;
         }
         template< typename Expr >
         vector& operator =( Expr const& right )
         {
-            detail::assign_component_wise< detail::assign >( *this, right );
+            detail::eval_component_wise< boost::proto::tag::assign >( *this, right );
             return *this;
         }
     };
@@ -238,7 +172,7 @@ namespace eggs { namespace la {
     >
     vector< Type, Dimension >& operator +=( vector< Type, Dimension >& left, Expr const& right )
     {
-        detail::assign_component_wise< detail::plus_assign >( left, right );
+        detail::eval_component_wise< boost::proto::tag::plus_assign >( left, right );
         return left;
     }
     template<
@@ -247,7 +181,7 @@ namespace eggs { namespace la {
     >
     vector< Type, Dimension >& operator -=( vector< Type, Dimension >& left, Expr const& right )
     {
-        detail::assign_component_wise< detail::minus_assign >( left, right );
+        detail::eval_component_wise< boost::proto::tag::minus_assign >( left, right );
         return left;
     }
     template<
@@ -256,7 +190,7 @@ namespace eggs { namespace la {
     >
     vector< Type, Dimension >& operator *=( vector< Type, Dimension >& left, Expr const& right )
     {
-        detail::assign_component_wise< detail::multiplies_assign >( left, right );
+        detail::eval_component_wise< boost::proto::tag::multiplies_assign >( left, right );
         return left;
     }
     template<
@@ -265,7 +199,7 @@ namespace eggs { namespace la {
     >
     vector< Type, Dimension >& operator /=( vector< Type, Dimension >& left, Expr const& right )
     {
-        detail::assign_component_wise< detail::divides_assign >( left, right );
+        detail::eval_component_wise< boost::proto::tag::divides_assign >( left, right );
         return left;
     }
     
