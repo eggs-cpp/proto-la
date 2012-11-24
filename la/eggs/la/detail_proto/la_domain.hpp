@@ -18,9 +18,6 @@ namespace eggs { namespace la { namespace detail_proto {
 
     using namespace boost::proto;
 
-    template< typename Expr >
-    struct la_expr;
-
     struct scalar_grammar;
     struct vector_grammar;
     struct matrix_grammar;
@@ -35,16 +32,10 @@ namespace eggs { namespace la { namespace detail_proto {
 
     struct la_domain
       : domain<
-            pod_generator< la_expr >
+            boost::proto::default_generator
           , la_grammar
         >
     {};
-
-    template< typename Expr >
-    struct la_expr
-    {
-        BOOST_PROTO_EXTENDS( Expr, la_expr< Expr >, la_domain );
-    };
 
 } } } // namespace eggs::la::detail_proto
 
