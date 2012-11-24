@@ -54,9 +54,6 @@
     <ClInclude Include="eggs\la\detail_proto\distribute_subscript.hpp">
       <Filter>eggs\la\detail_proto</Filter>
     </ClInclude>
-    <ClInclude Include="eggs\la\domain.hpp">
-      <Filter>eggs\la</Filter>
-    </ClInclude>
     <ClInclude Include="eggs\la\detail_proto\component_context.hpp">
       <Filter>eggs\la\detail_proto</Filter>
     </ClInclude>

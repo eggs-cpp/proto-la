@@ -12,6 +12,8 @@
 #ifndef EGGS_LA_MATRIX_HPP
 #define EGGS_LA_MATRIX_HPP
 
+#include <eggs/la/detail_proto/component_context.hpp>
+#include <eggs/la/detail_proto/la_domain.hpp>
 #include <eggs/la/matrix_traits.hpp>
 
 #include <boost/mpl/bool.hpp>

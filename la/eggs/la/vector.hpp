@@ -12,7 +12,8 @@
 #ifndef EGGS_LA_VECTOR_HPP
 #define EGGS_LA_VECTOR_HPP
 
-#include <eggs/la/domain.hpp>
+#include <eggs/la/detail_proto/component_context.hpp>
+#include <eggs/la/detail_proto/la_domain.hpp>
 #include <eggs/la/vector_traits.hpp>
 
 #include <boost/mpl/bool.hpp>
@@ -117,7 +118,7 @@ namespace eggs { namespace la {
       : public boost::proto::extends<
             typename boost::proto::terminal< Type[ Dimension ] >::type
           , vector< Type, Dimension >
-          , domain
+          , detail_proto::la_domain
         >
     {
     public:

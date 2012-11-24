@@ -9,7 +9,6 @@
  * Library home page: http://github.com/eggs-cpp/eggs-la
  */
 
-#include <eggs/la/domain.hpp>
 #include <eggs/la/vector.hpp>
 
 #include <boost/proto/proto.hpp>

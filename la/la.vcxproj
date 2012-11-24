@@ -91,7 +91,6 @@
     <ClInclude Include="eggs\la\detail_proto\scalar_grammar.hpp" />
     <ClInclude Include="eggs\la\detail_proto\vector_grammar.hpp" />
     <ClInclude Include="eggs\la\detail_proto\vector_literal.hpp" />
-    <ClInclude Include="eggs\la\domain.hpp" />
     <ClInclude Include="eggs\la\matrix.hpp" />
     <ClInclude Include="eggs\la\matrix_ref.hpp" />
     <ClInclude Include="eggs\la\matrix_traits.hpp" />
