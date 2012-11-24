@@ -66,5 +66,11 @@
     <ClInclude Include="eggs\la.hpp">
       <Filter>eggs</Filter>
     </ClInclude>
+    <ClInclude Include="eggs\la\matrix.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
+    <ClInclude Include="eggs\la\matrix_ref.hpp">
+      <Filter>eggs\la</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

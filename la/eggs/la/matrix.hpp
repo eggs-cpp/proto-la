@@ -19,6 +19,7 @@
 
 #include <boost/static_assert.hpp>
 
+#include <algorithm>
 #include <cstddef>
 #include <iosfwd>
 
@@ -50,17 +51,22 @@ namespace eggs { namespace la {
         
         matrix& operator =( matrix< Type, Rows, Columns > const& right )
         {
-            for( std::size_t i = 0; i < Rows * Columns; ++i )
-                _value[ i ] = right[ i ];
-
+            std::copy(
+                right.data() + 0, right.data() + Rows * Columns
+              , data()
+            );
             return *this;
         }
         template< typename RightType >
         matrix& operator =( matrix< RightType, Rows, Columns > const& right )
         {
-            for( std::size_t i = 0; i < Rows * Columns; ++i )
-                _value[ i ] = right[ i ];
-
+            for( std::size_t i = 0; i < Rows; ++i )
+            {
+                for( std::size_t j = 0; j < Columns; ++j )
+                {
+                    _value[ i ][ j ] = right[ i ][ j ];
+                }
+            }
             return *this;
         }
 
@@ -72,28 +78,38 @@ namespace eggs { namespace la {
     struct is_matrix< matrix< Type, Rows, Columns > >
       : boost::mpl::true_
     {};
-
+    
     template< typename Type, std::size_t Rows, std::size_t Columns >
-    struct rows< matrix< Type, Rows, Columns > >
-      : boost::mpl::size_t< Rows >
-    {};
+    struct matrix_traits< matrix< Type, Rows, Columns > >
+    {
+        typedef matrix< Type, Rows, Columns > matrix_type;
 
-    template< typename Type, std::size_t Rows, std::size_t Columns >
-    struct columns< matrix< Type, Rows, Columns > >
-      : boost::mpl::size_t< Columns >
-    {};
+        typedef Type scalar_type;
+        static std::size_t const rows = Rows;
+        static std::size_t const columns = Columns;
+
+        template< std::size_t Row, std::size_t Column >
+        static scalar_type& at( matrix_type& v )
+        {
+            return v[ Row ][ Column ];
+        }
+        template< std::size_t Row, std::size_t Column >
+        static scalar_type const& at( matrix_type const& v )
+        {
+            return v[ Row ][ Column ];
+        }
+    };
 
     /** Operators **/
-
+    
     template< typename Type, std::size_t Rows, std::size_t Columns >
-    std::ostream& operator <<( std::ostream& left, matrix< Type, Rows, Columns > const& right )
+    void print( std::ostream& stream, matrix< Type, Rows, Columns > const& right )
     {
-        left << "matrix{";
-        for( std::size_t i = 0; i < Rows * Columns; ++i )
-            left << ( i ? ", " : "" ) << right[i];
-        left << "}";
-
-        return left;
+        stream << "matrix{";
+        for( std::size_t i = 0; i < Rows; ++i )
+            for( std::size_t j = 0; j < Columns; ++j )
+                stream << ( j ? ", " : "" ) << m[i][j];
+        stream << "}";
     }
 
 } } // namespace eggs::la
