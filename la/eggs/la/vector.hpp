@@ -129,6 +129,19 @@ namespace eggs { namespace la {
             );
         }
 
+        vector( vector const& right )
+        {
+            std::copy(
+                right.data() + 0, right.data() + Dimension
+              , data()
+            );
+        }
+        template< typename Expr >
+        vector( Expr const& right )
+        {
+            detail::assign_component_wise< detail::assign >( *this, right );
+        }
+
         Type* data()
         {
             return boost::proto::value( *this );
