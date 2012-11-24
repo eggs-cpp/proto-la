@@ -46,8 +46,24 @@ ivec3 unrolled_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
     return ret;
 }
 
+ivec3 proto_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
+{
+    ivec3 ret;
+
+    boost::timer tim;
+    tim.restart();
+    for (int i = 0; i < cloops; ++i)
+    {
+        ret += ( p * 3 + ( r - q ) );
+    }
+    double d = tim.elapsed();
+
+    std::cout << " time: " << d << std::endl;
+    return ret;
+}
+
 template< typename Expr >
-ivec3 do_proto_time( Expr& expr )
+ivec3 do_partial_proto_time( Expr& expr )
 {
     ivec3 ret;
 
@@ -63,25 +79,9 @@ ivec3 do_proto_time( Expr& expr )
     return ret;
 }
 
-ivec3 proto_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
+ivec3 partial_proto_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
 {
-    return do_proto_time( p * 3 + ( r - q ) );
-}
-
-ivec3 full_proto_time( ivec3 const& p, ivec3 const& q, ivec3 const& r )
-{
-    ivec3 ret;
-
-    boost::timer tim;
-    tim.restart();
-    for (int i = 0; i < cloops; ++i)
-    {
-        ret += ( p * 3 + ( r - q ) );
-    }
-    double d = tim.elapsed();
-
-    std::cout << " time: " << d << std::endl;
-    return ret;
+    return do_partial_proto_time( p * 3 + ( r - q ) );
 }
 
 int main( int argc, char** argv )
@@ -117,8 +117,8 @@ int main( int argc, char** argv )
         >> q[0] >> q[1] >> q[2]
         >> r[0] >> r[1] >> r[2]
         ;
-    std::cout << "Full Proto: ";
-    print( std::cout, full_proto_time( p, q, r ) );
+    std::cout << "Partial Proto: ";
+    print( std::cout, partial_proto_time( p, q, r ) );
     std::cout << "\n\n";
 
     int breakpoint = 3;
